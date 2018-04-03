@@ -61,6 +61,7 @@ class App extends Component {
 				updateState(info);
 			}
 			else {
+				this.setState({userDetails: error});
 				console.log("error=" + error);
 			}
 		}
