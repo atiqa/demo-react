@@ -33,12 +33,18 @@ class App extends Component {
 		console.log("updateSortField: value=" + field);
 	}
 
-	updateState(info) {
-		console.log("updateState size=" + info.size);
-		this.setState({data: info.data});
-		this.setState({dataSize: info.size});
-		this.setState({searchValue: ""});
-		this.setState({userDetails: ""});
+	updateState(info, err) {		
+		if(info != null) {
+			console.log("updateState size=" + info.size);
+			this.setState({data: info.data});
+			this.setState({dataSize: info.size});
+			this.setState({searchValue: ""});
+			this.setState({userDetails: ""});
+		}
+		else if(err != null) {
+			this.setState({userDetails: err});
+		}
+		
 	}
 
 
@@ -58,10 +64,11 @@ class App extends Component {
 
 				var info = JSON.parse(body);
 				console.log(info);
-				updateState(info);
+				updateState(info, null);
 			}
 			else {
-				this.setState({userDetails: error});
+				var err = {user: "Error", id: "0", verbatim: error};
+				updateState(null, err);
 				console.log("error=" + error);
 			}
 		}
