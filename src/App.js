@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import 'whatwg-fetch';
-import fetchJsonp from 'fetch-jsonp'; 
 
 
 class App extends Component {
@@ -36,6 +34,7 @@ class App extends Component {
 	}
 
 	updateState(info) {
+		console.log("updateState size=" + info.size);
 		this.setState({data: info.data});
 		this.setState({dataSize: info.size});
 		this.setState({searchValue: ""});
@@ -45,7 +44,7 @@ class App extends Component {
 
 	fetchData(updateState, offset, order) {
 		var request = require('request');
-		var url = 'https://whispering-basin-42627.herokuapp.com/listUsers' + offset + '&pageSize=' + (offset + this.pageSize) + '&sortOrder=' + order + '&sortField=' + this.state.sortField + '&search=' + this.state.searchValue;
+		var url = 'https://whispering-basin-42627.herokuapp.com/listUsers?offset=' + offset + '&pageSize=' + (offset + this.pageSize) + '&sortOrder=' + order + '&sortField=' + this.state.sortField + '&search=' + this.state.searchValue;
 		var options = {
 			url: url,
 			headers: {
@@ -58,7 +57,7 @@ class App extends Component {
 			if (!error && response.statusCode == 200) {
 
 				var info = JSON.parse(body);
-				// console.log(info);
+				console.log(info);
 				updateState(info);
 			}
 			else {
@@ -113,12 +112,13 @@ console.log("page=" + page + " current=" + this.current + " lastPage=" + this.st
 
  
 	render() {
-		var elements = [<li className="page-item" onClick={this.sendRequest.bind(this, "prev")}><a className="page-link" href="#">Previous</a></li>];
+		var k = 0;
+		var elements = [<li className="page-item" onClick={this.sendRequest.bind(this, "prev")} key={k++} ><a className="page-link" href="#" >Previous</a></li>];
 		for (var i = 0; i < this.state.dataSize/this.pageSize; i++) {
 			//elements.push(<li className="page-item" onClick={this.sendRequest.bind(this, "1")}><a className="page-link" href="#">1</a>);
-			elements.push(<li className="page-item" onClick={this.sendRequest.bind(this, i * this.pageSize)}><a className="page-link" href="#">{i + 1}</a></li>);
+			elements.push(<li className="page-item" onClick={this.sendRequest.bind(this, i * this.pageSize)} key={k++}><a className="page-link" href="#">{i + 1}</a></li>);
 		}
-		elements.push(<li className="page-item" onClick={this.sendRequest.bind(this, "next")}><a className="page-link" href="#">Next</a></li>);
+		elements.push(<li className="page-item" onClick={this.sendRequest.bind(this, "next")} key={k}><a className="page-link" href="#">Next</a></li>);
 		return (
 		      <div className="container-fluid col-sm-12">
 			<nav className="navbar navbar-expand-sm bg-light navbar-light">
